@@ -227,18 +227,23 @@ $out_sequences.get("$resource.getUriTemplate()").get($uri)
         ## print the handlers
         #if($handlers.size() > 0)
 <handlers xmlns="http://ws.apache.org/ns/synapse">
-
-#if($apiName == 'admin--OpenWhiskRESTAPI')
-    <handler class="org.wso2.carbon.custom.auth.handler.CustomAPIAuthenticationHandler"/>
-#end
 #foreach($handler in $handlers)
-    #if($apiName != 'admin--OpenWhiskRESTAPI' || !($handler.className == "org.wso2.carbon.apimgt.gateway.handlers.security.APIAuthenticationHandler"))
-        <handler xmlns="http://ws.apache.org/ns/synapse" class="$handler.className">
+    #if($apiName == 'admin--OpenWhiskRESTAPI' && ($handler.className == "org.wso2.carbon.apimgt.gateway.handlers.security.APIAuthenticationHandler"))
+        <handler xmlns="http://ws.apache.org/ns/synapse" class="org.wso2.carbon.custom.auth.handler.CustomAPIAuthenticationHandler">
             #if($handler.hasProperties())
                 #set ($map = $handler.getProperties() )
                 #foreach($property in $map.entrySet())
                     <property name="$!property.key" value="$!property.value"/>
                 #end
+            #end
+        </handler>
+    #else
+        <handler xmlns="http://ws.apache.org/ns/synapse" class="$handler.className">
+            #if($handler.hasProperties())
+            #set ($map = $handler.getProperties() )
+            #foreach($property in $map.entrySet())
+            <property name="$!property.key" value="$!property.value"/>
+            #end
             #end
         </handler>
     #end
