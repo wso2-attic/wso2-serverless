@@ -1,0 +1,19 @@
+<api xmlns="http://ws.apache.org/ns/synapse" name="_WSO2AMRootAPI_" context="/">
+    <resource methods="GET" url-mapping="/" faultSequence="fault">
+        <inSequence>
+            <send>
+                <endpoint>
+                     <http uri-template="https://ccontroller.openwhisk.svc.cluster.local:8080/">
+                        <timeout>
+                            <duration>60000</duration>
+                            <responseAction>fault</responseAction>
+                        </timeout>
+                    </http>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+    </resource>
+</api>
